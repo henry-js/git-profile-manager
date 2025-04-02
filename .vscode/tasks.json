@@ -1,34 +1,58 @@
 {
-    "version": "0.1.0",
+    "version": "2.0.0",
     "command": "dotnet",
-    "isShellCommand": true,
     "args": [],
     "tasks": [
         {
-            "taskName": "build",
+            "label": "build",
+            "type": "shell",
+            "command": "dotnet",
             "args": [
+                "build",
                 "${workspaceRoot}/src/GitProfileManager/GitProfileManager.csproj"
             ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "_id": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "${workspaceRoot}/src/GitProfileManager/GitProfileManager.csproj",
+                "-c",
+                "Release"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "publish",
+                "${workspaceRoot}/src/GitProfileManager/GitProfileManager.csproj",
+                "-c",
+                "Release"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "nukeBuild",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/.nuke/_build.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+            ],
+            "problemMatcher": "$msCompile",
             "isBuildCommand": true,
-            "problemMatcher": "$msCompile"
         },
-        {
-            "taskName": "build",
-            "args": [
-                "${workspaceRoot}/src/GitProfileManager/GitProfileManager.csproj",
-                "-c",
-                "Release"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "taskName": "publish",
-            "args": [
-                "${workspaceRoot}/src/GitProfileManager/GitProfileManager.csproj",
-                "-c",
-                "Release"
-            ],
-            "problemMatcher": "$msCompile"
-        }
     ]
 }
