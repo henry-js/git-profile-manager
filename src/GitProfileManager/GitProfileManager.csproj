@@ -1,26 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <RootNamespace>GitProfileManager</RootNamespace>
     <TargetFramework>net9.0</TargetFramework>
-    <AssemblyName>git-profile-manager</AssemblyName>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PackAsTool>true</PackAsTool>
-    <ToolCommandName>gpm</ToolCommandName>
-    <PackageProjectUrl>https://github.com/agc93/git-profile-manager</PackageProjectUrl>
-    <PackageDescription>A .NET Core global tool for Git Profile Manager (gpm). Quickly manage and store common Git configurations. Install with `dotnet tool install -g git-profile-manager` and run with `gpm`.</PackageDescription>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Title>Git Profile Manager</Title>
-    <Authors>agc93</Authors>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PublishAot>true</PublishAot>
     <PublishSingleFile>true</PublishSingleFile>
-    <SelfContained>true</SelfContained>
+    <PublishSelfContained>true</PublishSelfContained>
+    <DebugType>embedded</DebugType>
+    <MinVerDefaultPreReleaseIdentifiers>preview</MinVerDefaultPreReleaseIdentifiers>
+    <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
   </PropertyGroup>
+
   <ItemGroup>
-    <Compile Remove="DependencyInjectionApp.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <!-- <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="2.3.0" /> -->
     <PackageReference Include="ConsoleAppFramework" Version="5.4.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -30,7 +24,34 @@
     <PackageReference Include="YamlDotNet" Version="8.1.2" />
     <PackageReference Include="Spectre.Cli.Extensions.DependencyInjection" Version="0.2.0" />
     <PackageReference Include="TypEngine" Version="0.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.7" />
+    <PackageReference Include="Jab" Version="0.11.0" />
+    <PackageReference Include="Raiqub.JabModules.MicrosoftExtensionsOptions" Version="1.0.16" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.3" />
+    <PackageReference Include="Velopack" Version="0.0.1053" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="GitProfileManager.Commands" />
+    <Using Include="GitProfileManager.Configuration" />
+    <Using Include="GitProfileManager.Services" />
+    <Using Include="ConsoleAppFramework" />
+    <Using Include="Jab" />
+    <Using Include="Raiqub.JabModules.MicrosoftExtensionsOptions" />
+    <Using Include="Microsoft.Extensions.Configuration" />
+    <Using Include="Microsoft.Extensions.Logging" />
+    <Using Include="Microsoft.Extensions.Logging.LoggerFactory" Alias="MSLogger" />
+    <Using Include="Microsoft.Extensions.Options" />
+    <Using Include="System.Text.Json" />
+    <Using Include="System.Text.Json.Serialization" />
+  </ItemGroup>
 </Project>
