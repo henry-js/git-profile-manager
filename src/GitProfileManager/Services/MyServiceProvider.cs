@@ -10,8 +10,8 @@ namespace GitProfileManager.Services;
 [Transient<IGitProfileStore, FileProfileStore>]
 [Singleton<ICommandFileService, CommandFileService>]
 [Singleton<IService, ServiceImplementation>]
-[Singleton<MyCommands>]
 [Singleton<ActivationCommands>]
+[Singleton<ProfileCommands>]
 [Singleton<IConfiguration>(Factory = nameof(CreateConfiguration))]
 
 internal partial class MyServiceProvider

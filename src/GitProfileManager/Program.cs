@@ -1,5 +1,4 @@
-﻿using GitProfileManager.Commands.Activate;
-using Velopack;
+﻿using Velopack;
 
 VelopackApp.Build().Run();
 
@@ -7,8 +6,8 @@ MyServiceProvider sp = new();
 
 ConsoleApp.ServiceProvider = sp;
 var app = ConsoleApp.Create();
-app.Add<MyCommands>();
 app.Add<ActivationCommands>();
+app.Add<ProfileCommands>("profile");
 await app.RunAsync(args);
 
 

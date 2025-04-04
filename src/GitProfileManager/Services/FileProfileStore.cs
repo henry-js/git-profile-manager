@@ -8,11 +8,11 @@ namespace GitProfileManager.Services
     public class FileProfileStore : IGitProfileStore
     {
         private const string _fileName = ".gitprofiles";
-        public Dictionary<string, string> ReadProfile(string profileName)
+        public Dictionary<string, string>? ReadProfile(string profileName)
         {
             var file = GetProfileFile();
             var d = GetProfiles(file);
-            return d.ContainsKey(profileName) ? d[profileName] : null;            
+            return d.TryGetValue(profileName, out Dictionary<string, string>? value) ? value : null;
         }
 
         public bool WriteProfile(string profileName, Dictionary<string, string> configurations)
@@ -28,9 +28,7 @@ namespace GitProfileManager.Services
         {
             var file = GetProfileFile();
             var d = GetProfiles(file);
-            if (d.ContainsKey(profileName)) {
-                d.Remove(profileName);
-            }
+            d.Remove(profileName);
             SaveProfiles(file, d);
             return true;
         }
@@ -58,16 +56,17 @@ namespace GitProfileManager.Services
             return d ?? new Dictionary<string, Dictionary<string, string>>();
         }
 
-        private FileInfo GetProfileFile() {
+        private FileInfo GetProfileFile()
+        {
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var homeDir = new DirectoryInfo(home); 
+            var homeDir = new DirectoryInfo(home);
             if (!homeDir.Exists) throw new DirectoryNotFoundException($"Could not locate home directory (tried {homeDir.FullName})");
             var file = new FileInfo(Path.Combine(homeDir.FullName, _fileName));
-            if (!file.Exists) {
-                using (var s = file.Create()) {
-                    s.Flush();
-                    s.Dispose();
-                }
+            if (!file.Exists)
+            {
+                using var s = file.Create();
+                s.FlushAsync();
+                s.DisposeAsync();
             }
             file.Refresh();
             return file;
