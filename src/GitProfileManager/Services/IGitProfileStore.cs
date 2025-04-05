@@ -2,8 +2,8 @@ namespace GitProfileManager.Services;
 
 public interface IGitProfileStore
 {
-    IEnumerable<string> GetProfiles();
-    Dictionary<string, string>? ReadProfile(string profileName);
-    bool WriteProfile(string profileName, Dictionary<string, string> configurations);
-    bool DeleteProfile(string profileName);
+    Task<IEnumerable<string>> GetProfiles();
+    Task<Dictionary<string, string>?> ReadProfile(string profileName);
+    Task<bool> WriteProfile(string profileName, Dictionary<string, string> configurations);
+    Task<bool> DeleteProfile(string profileName);
 }

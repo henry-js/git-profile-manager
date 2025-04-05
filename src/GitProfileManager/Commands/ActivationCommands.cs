@@ -9,8 +9,13 @@ public class ActivationCommands(IGitConfigService service, IGitProfileStore stor
     /// <param name="global">-g, Applies the profile globally, instead of the current repository</param>
     public async Task<int> Activate([Argument] string profileName, bool global = false)
     {
-        var profile = store.ReadProfile(profileName);
-        var list = new List<bool>();
+        var profile = await store.ReadProfile(profileName);
+        if (profile is null)
+        {
+            Console.WriteLine("No profile found");
+            return -1;
+        }
+
         var tasks = profile.Select(c => service.SetValueAsync(c.Key, c.Value, global));
         var results = await Task.WhenAll(tasks);
         if (results.All(r => r))
@@ -34,9 +39,14 @@ public class ActivationCommands(IGitConfigService service, IGitProfileStore stor
     /// <param name="global">-g, Applies the profile globally, instead of the current repository</param>
     public async Task<int> Deactivate([Argument] string profileName, bool global = false)
     {
-        var profile = store.ReadProfile(profileName);
-        var list = new List<bool>();
-        var tasks = profile.Select(c => service.UnsetValueAsync(c.Key, c.Value, global)).ToList();
+        var profile = await store.ReadProfile(profileName);
+        if (profile is null)
+        {
+            Console.WriteLine("No profile found");
+            return -1;
+        }
+
+        var tasks = profile.Select(c => service.UnsetValueAsync(c.Key, c.Value, global));
         var results = await Task.WhenAll(tasks);
         if (results.All(r => r))
         {

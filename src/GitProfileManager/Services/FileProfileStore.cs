@@ -1,39 +1,40 @@
+using System.Threading.Tasks;
 using YamlDotNet.Serialization;
 
 namespace GitProfileManager.Services;
 
-public class FileProfileStore : IGitProfileStore
+public class GitProfileStore : IGitProfileStore
 {
     private const string _fileName = ".gitprofiles";
-    public Dictionary<string, string>? ReadProfile(string profileName)
+    public async Task<Dictionary<string, string>?> ReadProfile(string profileName)
     {
-        var file = GetProfileFile();
-        var d = GetProfiles(file);
-        return d.TryGetValue(profileName, out Dictionary<string, string>? value) ? value : null;
+        var file = await GetProfileFile();
+        var d = await GetProfiles(file);
+        return d.TryGetValue(profileName, out var value) ? value : null;
     }
 
-    public bool WriteProfile(string profileName, Dictionary<string, string> configurations)
+    public async Task<bool> WriteProfile(string profileName, Dictionary<string, string> configurations)
     {
-        var file = GetProfileFile();
-        var d = GetProfiles(file);
+        var file = await GetProfileFile();
+        var d = await GetProfiles(file);
         d[profileName] = configurations;
         SaveProfiles(file, d);
         return file.Length > 0;
     }
 
-    public bool DeleteProfile(string profileName)
+    public async Task<bool> DeleteProfile(string profileName)
     {
-        var file = GetProfileFile();
-        var d = GetProfiles(file);
+        var file = await GetProfileFile();
+        var d = await GetProfiles(file);
         d.Remove(profileName);
         SaveProfiles(file, d);
         return true;
     }
 
-    public IEnumerable<string> GetProfiles()
+    public async Task<IEnumerable<string>> GetProfiles()
     {
-        var file = GetProfileFile();
-        var d = GetProfiles(file);
+        var file = await GetProfileFile();
+        var d = await GetProfiles(file);
         return d.Keys;
     }
 
@@ -45,15 +46,15 @@ public class FileProfileStore : IGitProfileStore
         file.Refresh();
     }
 
-    private static Dictionary<string, Dictionary<string, string>> GetProfiles(FileInfo file)
+    private static async Task<Dictionary<string, Dictionary<string, string>>> GetProfiles(FileInfo file)
     {
         var deser = new DeserializerBuilder().Build();
-        var content = File.ReadAllText(file.FullName);
+        var content = await File.ReadAllTextAsync(file.FullName);
         var d = deser.Deserialize<Dictionary<string, Dictionary<string, string>>>(content);
-        return d ?? new Dictionary<string, Dictionary<string, string>>();
+        return d ?? [];
     }
 
-    private FileInfo GetProfileFile()
+    private static async Task<FileInfo> GetProfileFile()
     {
         var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         var homeDir = new DirectoryInfo(home);
@@ -61,9 +62,9 @@ public class FileProfileStore : IGitProfileStore
         var file = new FileInfo(Path.Combine(homeDir.FullName, _fileName));
         if (!file.Exists)
         {
-            using var s = file.Create();
-            s.FlushAsync();
-            s.DisposeAsync();
+            await using var s = file.Create();
+            await s.FlushAsync();
+            await s.DisposeAsync();
         }
         file.Refresh();
         return file;

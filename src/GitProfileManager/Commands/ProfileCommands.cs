@@ -7,7 +7,7 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
     /// </summary>
     public async Task<int> List()
     {
-        var profiles = store.GetProfiles();
+        var profiles = await store.GetProfiles();
         Console.WriteLine("Currently stored profiles: ");
         if (profiles.Any())
         {
@@ -34,9 +34,14 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
         var cmds = new Dictionary<string, string>();
         if (!string.IsNullOrWhiteSpace(from))
         {
-            cmds = store.ReadProfile(from);
+            cmds = await store.ReadProfile(from);
         }
-        var d = store.WriteProfile(name, cmds);
+        if (cmds is null)
+        {
+            Console.WriteLine("No profile found");
+            return -1;
+        }
+        var d = await store.WriteProfile(name, cmds);
         if (d)
         {
             Console.WriteLine($"Succesfully created '{name}' profile {(source ? "from " + from : string.Empty)}");
@@ -84,7 +89,7 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
                 confirm = key == 'y' || key == 'Y';
             }
         }
-        var del = store.DeleteProfile(name);
+        var del = await store.DeleteProfile(name);
         if (del)
         {
             Console.WriteLine($"Removed '{name}' profile from store!");
@@ -102,7 +107,7 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
     /// <param name="remove">-r, Removes the given configuration item from the profile, instead of adding it.</param>
     public async Task<int> Edit([Argument] string profileName, [Argument] string configVal, bool remove)
     {
-        var profile = store.ReadProfile(profileName) ?? [];
+        var profile = await store.ReadProfile(profileName) ?? [];
         var config = configVal.Split('=');
         if (profile.ContainsKey(config[0]))
         {
@@ -112,7 +117,7 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
         {
             profile.Add(config[0], config[1]);
         }
-        var result = store.WriteProfile(profileName, profile);
+        var result = await store.WriteProfile(profileName, profile);
         return result ? 0 : 2;
     }
 
@@ -133,7 +138,7 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
             Console.Error.WriteLine("No export path provided!");
             return 400;
         }
-        var profile = store.ReadProfile(profileName);
+        var profile = await store.ReadProfile(profileName);
         if (profile == null)
         {
             Console.WriteLine($"Could not find profile '{profileName}'! Does it exist?");
@@ -176,7 +181,7 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
         }
         var name = GetProfileName(profileName, commandFile);
         var cmds = fileService.ReadFromFile(file);
-        var d = store.WriteProfile(name, cmds);
+        var d = await store.WriteProfile(name, cmds);
         if (d)
         {
             Console.WriteLine($"Succesfully created '{name}' profile from '{file.FullName}'!");
@@ -208,7 +213,7 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
             Console.Error.WriteLine("No profile name provided!");
             return 400;
         }
-        var profile = store.ReadProfile(profileName);
+        var profile = await store.ReadProfile(profileName);
         if (profile == null)
         {
             Console.WriteLine($"Could not find profile '{profileName}'! Does it exist?");

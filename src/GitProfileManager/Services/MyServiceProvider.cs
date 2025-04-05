@@ -7,7 +7,7 @@ namespace GitProfileManager.Services;
 [Transient<IConfigureOptions<CliConfig>>(Factory = nameof(BindCliConfig))]
 [Singleton<IGit, Git>]
 [Singleton<IGitConfigService, GitConfigService>]
-[Transient<IGitProfileStore, FileProfileStore>]
+[Transient<IGitProfileStore, GitProfileStore>]
 [Singleton<ICommandFileService, CommandFileService>]
 [Singleton<ActivationCommands>]
 [Singleton<ProfileCommands>]
