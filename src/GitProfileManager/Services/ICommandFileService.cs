@@ -1,10 +1,7 @@
-using System.Collections.Generic;
-using System.IO;
+namespace GitProfileManager.Services;
 
-namespace GitProfileManager.Services
+public interface ICommandFileService
 {
-    public interface ICommandFileService {
-        Dictionary<string, string> ReadFromFile(FileInfo filePath);
-        bool WriteToFile(Dictionary<string, string> configurations, FileInfo path, bool includeCommand = false);
-    }
+    Dictionary<string, string> ReadFromFile(FileInfo filePath);
+    bool WriteToFile(Dictionary<string, string> configurations, FileInfo path, bool includeCommand = false);
 }

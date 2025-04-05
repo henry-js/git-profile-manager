@@ -1,7 +1,7 @@
-namespace GitProfileManager.Services
+namespace GitProfileManager.Services;
+
+public interface IGitConfigService
 {
-    public interface IGitConfigService {
-        bool SetValue(string key, string value, bool global = false);
-        bool UnsetValue(string key, string value, bool global = false);
-    }
+    Task<bool> SetValueAsync(string key, string value, bool global = false);
+    Task<bool> UnsetValueAsync(string key, string value, bool global = false);
 }

@@ -1,5 +1,3 @@
-using System.Reflection;
-
 namespace GitProfileManager.Commands;
 
 public class ProfileCommands(IGitProfileStore store, ICommandFileService fileService)
@@ -30,7 +28,7 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
     /// </summary>
     /// <param name="name">PROFILE | The profile name</param>
     /// <param name="from">-f, An existing profile to base the new profile on (essentially duplicates the existing profile)</param>
-    public async Task<int> Create([Argument] string name, string? from)
+    public async Task<int> Create([Argument] string name, string? from = null)
     {
         var source = !string.IsNullOrWhiteSpace(from);
         var cmds = new Dictionary<string, string>();

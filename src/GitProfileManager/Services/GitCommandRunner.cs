@@ -1,6 +1,4 @@
-using System;
 using System.Diagnostics;
-using System.IO;
 
 namespace GitProfileManager.Services
 {
@@ -52,6 +50,6 @@ namespace GitProfileManager.Services
 
         private bool _disposed;
         private readonly Process _gitProcess;
-        
+
     }
 }

@@ -6,10 +6,15 @@
     "configurations": [
         {
             "name": "C#: GitProfileManager Debug",
-            "type": "dotnet",
+            "type": "coreclr",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/src/GitProfileManager/GitProfileManager.csproj",
             "preLaunchTask": "dotnet: build",
+            "program": "${workspaceFolder}/artifacts/bin/GitProfileManager/debug/gpm.dll",
+            "launchSettingsProfile": "Debug",
+            "launchSettingsFilePath": "${workspaceFolder}/src/GitProfileManager/Properties/launchSettings.json",
+            "logging": {
+                "moduleLoad": false
+            }
         }
     ]
 }

@@ -2,30 +2,38 @@ using System;
 
 namespace GitProfileManager.Services
 {
-    public class GitCommandService : IGitConfigService
+    public class GitConfigService : IGitConfigService
     {
-        private GitCommandRunner _runner;
+        private readonly IGit git;
 
-        public GitCommandService(GitCommandRunner runner) {
-            _runner = runner;
-        }
+        public GitConfigService(IGit git) => this.git = git;
 
-        public bool SetValue(string key, string value, bool global = false)
+        public async Task<bool> SetValueAsync(string key, string value, bool global = false)
         {
-            if (!value.StartsWith("\"")) {
+            if (!value.StartsWith("\""))
+            {
                 value = $"\"{value}\"";
             }
-            var output = _runner.RunCommand($"config {(global ? "--global" : string.Empty)} {key} {value}");
-            return output.Item1 == 0 && output.Item2 == string.Empty ;
+
+            var result = await git.Config([(global ? "--global" : string.Empty), "set", key, value]);
+
+            return result.IsSuccess;
+            // var output = _runner.RunCommand($"config {(global ? "--global" : string.Empty)} {key} {value}");
+            // return output.Item1 == 0 && output.Item2 == string.Empty;
         }
 
-        public bool UnsetValue(string key, string value, bool global = false)
+        public async Task<bool> UnsetValueAsync(string key, string value, bool global = false)
         {
-            if (!value.StartsWith("\"")) {
+            if (!value.StartsWith("\""))
+            {
                 value = $"\"{value}\"";
             }
-            var output = _runner.RunCommand($"config {(global ? "--global" : string.Empty)} --unset {key} {value}");
-            return output.Item1 == 0 && output.Item2 == string.Empty ;
+
+            var result = await git.Config([(global ? "--global" : string.Empty), "unset", key]);
+
+            return result.IsSuccess;
+            // var output = _runner.RunCommand($"config {(global ? "--global" : string.Empty)} --unset {key} {value}");
+            // return output.Item1 == 0 && output.Item2 == string.Empty;
         }
     }
 }

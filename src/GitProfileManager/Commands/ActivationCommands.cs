@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using GitProfileManager.Services;
-using Spectre.Cli;
-
 namespace GitProfileManager.Commands;
 
 public class ActivationCommands(IGitConfigService service, IGitProfileStore store)
@@ -18,7 +11,8 @@ public class ActivationCommands(IGitConfigService service, IGitProfileStore stor
     {
         var profile = store.ReadProfile(profileName);
         var list = new List<bool>();
-        var results = profile.Select(c => service.SetValue(c.Key, c.Value, global)).ToList();
+        var tasks = profile.Select(c => service.SetValueAsync(c.Key, c.Value, global));
+        var results = await Task.WhenAll(tasks);
         if (results.All(r => r))
         {
             Console.WriteLine($"All configuration from {profileName} profile applied successfully");
@@ -42,7 +36,8 @@ public class ActivationCommands(IGitConfigService service, IGitProfileStore stor
     {
         var profile = store.ReadProfile(profileName);
         var list = new List<bool>();
-        var results = profile.Select(c => service.UnsetValue(c.Key, c.Value, global)).ToList();
+        var tasks = profile.Select(c => service.UnsetValueAsync(c.Key, c.Value, global)).ToList();
+        var results = await Task.WhenAll(tasks);
         if (results.All(r => r))
         {
             Console.WriteLine($"All configuration from {profileName} profile reversed successfully");
