@@ -1,22 +1,71 @@
 using CliWrap;
+using CliWrap.Buffered;
+using CliWrap.Exceptions;
 
 namespace GitProfileManager.Services;
+
 public class Git : IGit
 {
     private readonly Command _git;
+    private const string GIT = "git";
+    private const string CONFIG = "config";
+    private const string VERSION = "--version";
 
-    public Git()
+    public Git() => _git = Cli.Wrap(GIT)
+        // .WithValidation(CommandResultValidation.None)
+        ;
+
+    public async Task<GitResult> Config(params string[] args)
     {
-        _git = Cli.Wrap("git");
+        try
+        {
+            var result = await _git.WithArguments([CONFIG, .. args])
+                .ExecuteBufferedAsync();
+
+            return new GitResult(
+                result.IsSuccess,
+        result.StandardOutput,
+        result.StandardError,
+                result.ExitCode);
+        }
+        catch (CommandExecutionException ex)
+        {
+            throw new GitCommandFailedException(ex.Message, ex);
+        }
     }
-    public async Task<CommandResult> Config(params string[] args)
+
+    public async Task<Version> Version()
     {
-        return await _git.WithArguments(args)
-            .ExecuteAsync();
+        var result = await _git
+            .WithArguments(VERSION)
+            .ExecuteBufferedAsync();
+        var versionString = result.StandardOutput.Split("version").Last().Trim();
+
+        var parts = versionString.Split('.').Take(3).Select(x => int.Parse(x)).ToArray();
+        return new Version(parts[0], parts[1], parts[2]);
+    }
+}
+
+[Serializable]
+public class GitCommandFailedException : Exception
+{
+    public GitCommandFailedException()
+    {
+    }
+
+    public GitCommandFailedException(string? message) : base(message)
+    {
+    }
+
+    public GitCommandFailedException(string? message, Exception? innerException) : base(message, innerException)
+    {
     }
 }
 
 public interface IGit
 {
-    Task<CommandResult> Config(params string[] args);
+    Task<GitResult> Config(params string[] args);
+    Task<Version> Version();
 }
+
+public record GitResult(bool IsSuccess, string StdOut, string StdErr, int ExitCode);

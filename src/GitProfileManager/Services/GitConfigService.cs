@@ -1,39 +1,51 @@
-using System;
 
-namespace GitProfileManager.Services
+namespace GitProfileManager.Services;
+
+public class GitConfigService : IGitConfigService
 {
-    public class GitConfigService : IGitConfigService
+    private readonly IGit git;
+
+    public GitConfigService(IGit git) => this.git = git;
+
+    public async Task<GitResult> SetValueAsync(GitConfigArgs args)
     {
-        private readonly IGit git;
+        ArgumentException.ThrowIfNullOrWhiteSpace(args.Key);
+        ArgumentException.ThrowIfNullOrWhiteSpace(args.Value);
 
-        public GitConfigService(IGit git) => this.git = git;
-
-        public async Task<bool> SetValueAsync(string key, string value, bool global = false)
+        if (!args.Value.StartsWith('\"'))
         {
-            if (!value.StartsWith("\""))
-            {
-                value = $"\"{value}\"";
-            }
-
-            var result = await git.Config([(global ? "--global" : string.Empty), "set", key, value]);
-
-            return result.IsSuccess;
-            // var output = _runner.RunCommand($"config {(global ? "--global" : string.Empty)} {key} {value}");
-            // return output.Item1 == 0 && output.Item2 == string.Empty;
+            args = args with { Value = $"\"{args.Value}\"" };
         }
+        var scope = GetScope(args.Scope);
+        var result = await git.Config([scope, "set", args.Key, args.Value]);
 
-        public async Task<bool> UnsetValueAsync(string key, string value, bool global = false)
+        return result;
+    }
+
+    public async Task<bool> UnsetValueAsync(GitConfigArgs args)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(args.Key);
+
+        var scope = GetScope(args.Scope);
+
+        var result = await git.Config([scope, "unset", args.Key]);
+
+        return result.IsSuccess;
+        // var output = _runner.RunCommand($"config {(global ? "--global" : string.Empty)} --unset {key} {value}");
+        // return output.Item1 == 0 && output.Item2 == string.Empty;
+    }
+
+    private static string GetScope(GitConfigScope scope)
+    {
+        return scope switch
         {
-            if (!value.StartsWith("\""))
-            {
-                value = $"\"{value}\"";
-            }
-
-            var result = await git.Config([(global ? "--global" : string.Empty), "unset", key]);
-
-            return result.IsSuccess;
-            // var output = _runner.RunCommand($"config {(global ? "--global" : string.Empty)} --unset {key} {value}");
-            // return output.Item1 == 0 && output.Item2 == string.Empty;
-        }
+            GitConfigScope.Local => "--local",
+            GitConfigScope.Global => "--global",
+            GitConfigScope.Unknown => throw new NotImplementedException(),
+            _ => throw new NotImplementedException(),
+        };
     }
 }
+
+public enum GitConfigScope { Unknown = 0,   /* Worktree = 1, */    Local = 2, Global = 3,  /*  System = 4, */};
+public record GitConfigArgs(string Key, string? Value, GitConfigScope Scope = GitConfigScope.Local);
