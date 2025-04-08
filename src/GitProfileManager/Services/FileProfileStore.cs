@@ -40,7 +40,7 @@ public class GitProfileStore : IGitProfileStore
 
     private static void SaveProfiles(FileInfo file, Dictionary<string, Dictionary<string, string>> d)
     {
-        var ser = new SerializerBuilder().Build();
+        var ser = new StaticSerializerBuilder(new YamlStaticContext()).Build();
         var yaml = ser.Serialize(d);
         File.WriteAllText(file.FullName, yaml);
         file.Refresh();
@@ -48,7 +48,7 @@ public class GitProfileStore : IGitProfileStore
 
     private static async Task<Dictionary<string, Dictionary<string, string>>> GetProfiles(FileInfo file)
     {
-        var deser = new DeserializerBuilder().Build();
+        var deser = new StaticDeserializerBuilder(new YamlStaticContext()).Build();
         var content = await File.ReadAllTextAsync(file.FullName);
         var d = deser.Deserialize<Dictionary<string, Dictionary<string, string>>>(content);
         return d ?? [];
@@ -70,3 +70,6 @@ public class GitProfileStore : IGitProfileStore
         return file;
     }
 }
+
+[YamlStaticContext]
+public partial class YamlStaticContext : StaticContext;
