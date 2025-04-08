@@ -27,13 +27,16 @@ class Build : NukeBuild, IAssetRelease, ITest, IHasSolution
         .Executes(() =>
         {
             Log.Information("Cleaning Directory: {Directory}", Release.ReleaseDirectory);
+            Release.ReleaseDirectory.CreateOrCleanDirectory();
 
-            var pkgId = Release.PackageId;
-            var pubVer = Release.AssetVersion;
-            var pubDir = Release.PublishDirectory;
-            var mainExe = Release.AssetExecutable;
-            var relDir = Release.ReleaseDirectory;
-            Vpk.Invoke($"pack --packId {Release.PackageId} --packVersion {Release.AssetVersion} --packDir {Release.PublishDirectory} --mainExe {Release.AssetExecutable} --outputDir {Release.ReleaseDirectory} --shortcuts None");
+            var version = (this as IHasMainProject).MainProject.GetPublishedVersion((this as IHasPublish).PublishDirectory);
+            Log.Information("Version: {Version}", version);
+            Log.Information("Release.PackageId: {PackageId}", Release.PackageId);
+            Log.Information("Release.PublishDirectory: {PublishDirectory}", Release.PublishDirectory);
+            Log.Information("Release.AssetExecutable: {AssetExecutable}", Release.AssetExecutable);
+            Log.Information("Release.ReleaseDirectory: {ReleaseDirectory}", Release.ReleaseDirectory);
+
+            Vpk.Invoke($"pack --packId git-prof-man --packVersion {version} --packDir {Release.PublishDirectory} --mainExe {Release.AssetExecutable}.exe --outputDir {Release.ReleaseDirectory} --shortcuts None");
         });
 
     Target ITest.Test => _ => _
