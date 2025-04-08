@@ -1,4 +1,0 @@
-Storage: 'AzureStorage'
-AzureStorage:
-  Container: 'gpm'
-  MatchStrategy: 'Runtime'
