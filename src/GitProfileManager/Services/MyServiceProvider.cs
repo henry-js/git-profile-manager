@@ -1,3 +1,7 @@
+
+using GitProfileManager.Lib.Configuration;
+using GitProfileManager.Lib.Services;
+
 namespace GitProfileManager.Services;
 
 [ServiceProvider]
@@ -8,6 +12,8 @@ namespace GitProfileManager.Services;
 [Singleton<IGit, Git>]
 [Singleton<IGitConfigService, GitConfigService>]
 [Transient<IGitProfileStore, GitProfileStore>]
+[Singleton<IFileSystem>(Instance = nameof(CreateFileManager))]
+[Singleton<IProfileSerializer, YamlProfileSerializer>]
 [Singleton<ICommandFileService, CommandFileService>]
 [Singleton<ActivationCommands>]
 [Singleton<ProfileCommands>]
@@ -20,7 +26,12 @@ internal partial class MyServiceProvider
     //         .AddJsonFile("./config.json", false)
     //         .Build();
 
-    public ILoggerFactory LoggerFactory
+    private IFileSystem CreateFileManager =>
+        new FileManager(
+            Environment.GetEnvironmentVariable("GPM_PROFILE_PATH", EnvironmentVariableTarget.User)
+            ?? (XDGHelper.GetConfigFilePath())
+            ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ProfileManager.FileName));
+    private ILoggerFactory LoggerFactory
         => MSLogger.Create(builder => builder.AddConsole());
 
     private ILogger<T> CreateLogger<T>()
@@ -29,4 +40,16 @@ internal partial class MyServiceProvider
     // private static IConfigureOptions<CliConfig> BindCliConfig(IConfiguration configuration)
     //     => IOptionsModule
     //         .Configure<CliConfig>(config => configuration.Bind("Config", config));
+}
+
+public static class XDGHelper
+{
+    private static string? CONFIG_HOME => Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
+    public static string? GetConfigFilePath()
+    {
+        var result = CONFIG_HOME is null ? null : Path.Combine(CONFIG_HOME, "git-profile-manager", ProfileManager.FileName);
+        var dir = Path.GetDirectoryName(result);
+        if (!Directory.Exists(dir) && dir is not null) Directory.CreateDirectory(dir);
+        return result;
+    }
 }

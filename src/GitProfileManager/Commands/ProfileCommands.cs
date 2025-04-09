@@ -1,3 +1,5 @@
+using GitProfileManager.Lib.Services;
+
 namespace GitProfileManager.Commands;
 
 public class ProfileCommands(IGitProfileStore store, ICommandFileService fileService)

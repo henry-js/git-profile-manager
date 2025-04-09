@@ -2,7 +2,7 @@ using CliWrap;
 using CliWrap.Buffered;
 using CliWrap.Exceptions;
 
-namespace GitProfileManager.Services;
+namespace GitProfileManager.Lib.Services;
 
 public class Git : IGit
 {

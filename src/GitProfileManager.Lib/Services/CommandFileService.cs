@@ -1,6 +1,7 @@
+using GitProfileManager.Lib.Extensions;
 using Pair = System.Collections.Generic.KeyValuePair<string, string>;
 
-namespace GitProfileManager.Services;
+namespace GitProfileManager.Lib.Services;
 
 public class CommandFileService : ICommandFileService
 {

@@ -1,4 +1,4 @@
-namespace GitProfileManager.Services;
+namespace GitProfileManager.Lib.Services;
 
 public interface ICommandFileService
 {

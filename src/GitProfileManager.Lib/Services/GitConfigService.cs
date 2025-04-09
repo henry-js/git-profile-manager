@@ -1,5 +1,5 @@
 
-namespace GitProfileManager.Services;
+namespace GitProfileManager.Lib.Services;
 
 public class GitConfigService : IGitConfigService
 {

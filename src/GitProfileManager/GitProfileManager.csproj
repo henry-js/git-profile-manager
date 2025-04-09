@@ -14,7 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CliWrap" Version="3.8.2" />
     <PackageReference Include="ConsoleAppFramework" Version="5.4.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -32,15 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <Using Include="GitProfileManager.Commands" />
-    <Using Include="GitProfileManager.Configuration" />
-    <Using Include="GitProfileManager.Services" />
     <Using Include="ConsoleAppFramework" />
     <Using Include="Jab" />
     <Using Include="Raiqub.JabModules.MicrosoftExtensionsOptions" />
@@ -50,5 +41,9 @@
     <Using Include="Microsoft.Extensions.Options" />
     <Using Include="System.Text.Json" />
     <Using Include="System.Text.Json.Serialization" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GitProfileManager.Lib\GitProfileManager.Lib.csproj" />
   </ItemGroup>
 </Project>

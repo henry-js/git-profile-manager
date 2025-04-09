@@ -1,4 +1,4 @@
-namespace GitProfileManager;
+namespace GitProfileManager.Lib.Extensions;
 
 public static class Extensions
 {

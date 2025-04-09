@@ -1,4 +1,5 @@
-﻿using Velopack;
+﻿using GitProfileManager.Services;
+using Velopack;
 
 VelopackApp.Build().Run();
 

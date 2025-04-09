@@ -1,5 +1,5 @@
 using FluentAssertions;
-using GitProfileManager.Services;
+using GitProfileManager.Lib.Services;
 
 namespace GitProfileManager.Tests.Integration;
 

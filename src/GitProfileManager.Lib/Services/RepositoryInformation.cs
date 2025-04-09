@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace GitProfileManager.Services;
+namespace GitProfileManager.Lib.Services;
 
 public class RepositoryInformation : IDisposable
 {

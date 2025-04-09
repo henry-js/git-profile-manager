@@ -1,4 +1,4 @@
-using GitProfileManager.Services;
+using GitProfileManager.Lib.Services;
 using NSubstitute;
 
 namespace GitProfileManager.Tests;

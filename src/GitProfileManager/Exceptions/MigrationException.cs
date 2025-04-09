@@ -1,7 +1,7 @@
-namespace GitProfileManager.Services;
+namespace GitProfileManager.Exceptions;
 
 [Serializable]
-internal class MigrationException : Exception
+public class MigrationException : Exception
 {
     public MigrationException()
     {
