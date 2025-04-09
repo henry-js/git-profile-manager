@@ -7,7 +7,7 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
     /// </summary>
     public async Task<int> List()
     {
-        var profiles = await store.GetProfiles();
+        var profiles = await store.GetProfileNames();
         Console.WriteLine("Currently stored profiles: ");
         if (profiles.Any())
         {

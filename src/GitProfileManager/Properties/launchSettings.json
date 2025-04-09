@@ -2,7 +2,7 @@
   "profiles": {
     "Debug": {
       "commandName": "Project",
-      "commandLineArgs": "activate first",
+      "commandLineArgs": "profile show personal",
     }
   }
 }

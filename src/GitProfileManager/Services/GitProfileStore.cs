@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 
 namespace GitProfileManager.Services;
@@ -10,14 +10,14 @@ public class GitProfileStore : IGitProfileStore
     {
         var file = await GetProfileFile();
         var d = await GetProfiles(file);
-        return d.TryGetValue(profileName, out var value) ? value : null;
+        return d.Profiles.TryGetValue(profileName, out var value) ? value : null;
     }
 
     public async Task<bool> WriteProfile(string profileName, Dictionary<string, string> configurations)
     {
         var file = await GetProfileFile();
         var d = await GetProfiles(file);
-        d[profileName] = configurations;
+        d.Profiles[profileName] = configurations;
         SaveProfiles(file, d);
         return file.Length > 0;
     }
@@ -26,19 +26,19 @@ public class GitProfileStore : IGitProfileStore
     {
         var file = await GetProfileFile();
         var d = await GetProfiles(file);
-        d.Remove(profileName);
+        d.Profiles.Remove(profileName);
         SaveProfiles(file, d);
         return true;
     }
 
-    public async Task<IEnumerable<string>> GetProfiles()
+    public async Task<IEnumerable<string>> GetProfileNames()
     {
         var file = await GetProfileFile();
         var d = await GetProfiles(file);
-        return d.Keys;
+        return d.Profiles.Keys;
     }
 
-    private static void SaveProfiles(FileInfo file, Dictionary<string, Dictionary<string, string>> d)
+    private static void SaveProfiles(FileInfo file, ProfileManager d)
     {
         var ser = new StaticSerializerBuilder(new YamlStaticContext()).Build();
         var yaml = ser.Serialize(d);
@@ -46,12 +46,36 @@ public class GitProfileStore : IGitProfileStore
         file.Refresh();
     }
 
-    private static async Task<Dictionary<string, Dictionary<string, string>>> GetProfiles(FileInfo file)
+    private static async Task<ProfileManager> GetProfiles(FileInfo file)
     {
         var deser = new StaticDeserializerBuilder(new YamlStaticContext()).Build();
         var content = await File.ReadAllTextAsync(file.FullName);
-        var d = deser.Deserialize<Dictionary<string, Dictionary<string, string>>>(content);
-        return d ?? [];
+
+        return MigrateToProfileManager(content, deser);
+    }
+
+    private static ProfileManager MigrateToProfileManager(string content, IDeserializer deserializer)
+    {
+        try
+        {
+            return deserializer.Deserialize<ProfileManager>(content);
+        }
+        catch (YamlException)
+        {
+            try
+            {
+                var profiles = deserializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(content);
+                return new ProfileManager() { Profiles = profiles };
+            }
+            catch (Exception e)
+            {
+                throw new MigrationException("Could not migrate legacy .gitprofiles file to new ProfileManager format", e);
+            }
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     private static async Task<FileInfo> GetProfileFile()
@@ -70,6 +94,3 @@ public class GitProfileStore : IGitProfileStore
         return file;
     }
 }
-
-[YamlStaticContext]
-public partial class YamlStaticContext : StaticContext;

@@ -4,21 +4,21 @@ namespace GitProfileManager.Services;
 [Singleton<ILoggerFactory>(Instance = nameof(LoggerFactory))]
 [Singleton(typeof(ILogger<>), Factory = nameof(CreateLogger))]
 [Import(typeof(IOptionsModule))]
-[Transient<IConfigureOptions<CliConfig>>(Factory = nameof(BindCliConfig))]
+// [Transient<IConfigureOptions<CliConfig>>(Factory = nameof(BindCliConfig))]
 [Singleton<IGit, Git>]
 [Singleton<IGitConfigService, GitConfigService>]
 [Transient<IGitProfileStore, GitProfileStore>]
 [Singleton<ICommandFileService, CommandFileService>]
 [Singleton<ActivationCommands>]
 [Singleton<ProfileCommands>]
-[Singleton<IConfiguration>(Factory = nameof(CreateConfiguration))]
+// [Singleton<IConfiguration>(Factory = nameof(CreateConfiguration))]
 
 internal partial class MyServiceProvider
 {
-    private IConfiguration CreateConfiguration()
-        => new ConfigurationBuilder()
-            .AddJsonFile("./config.json", false)
-            .Build();
+    // private IConfiguration CreateConfiguration()
+    //     => new ConfigurationBuilder()
+    //         .AddJsonFile("./config.json", false)
+    //         .Build();
 
     public ILoggerFactory LoggerFactory
         => MSLogger.Create(builder => builder.AddConsole());
@@ -26,7 +26,7 @@ internal partial class MyServiceProvider
     private ILogger<T> CreateLogger<T>()
         => LoggerFactory.CreateLogger<T>();
 
-    private static IConfigureOptions<CliConfig> BindCliConfig(IConfiguration configuration)
-        => IOptionsModule
-            .Configure<CliConfig>(config => configuration.Bind("Config", config));
+    // private static IConfigureOptions<CliConfig> BindCliConfig(IConfiguration configuration)
+    //     => IOptionsModule
+    //         .Configure<CliConfig>(config => configuration.Bind("Config", config));
 }
