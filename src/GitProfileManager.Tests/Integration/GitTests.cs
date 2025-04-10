@@ -3,7 +3,7 @@ using GitProfileManager.Lib.Services;
 
 namespace GitProfileManager.Tests.Integration;
 
-[Explicit]
+// [Explicit]
 public class GitTests
 {
     private readonly IGit _git;

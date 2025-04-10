@@ -31,12 +31,12 @@ internal class FileManager : IFileSystem
         return file;
     }
 
-    public Task<string> ReadFileAsync(string path)
+    public Task<string> ReadFileAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task WriteFileAsync(string path, string content)
+    public Task WriteFileAsync(string content)
     {
         throw new NotImplementedException();
     }

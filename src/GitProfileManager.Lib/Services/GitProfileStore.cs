@@ -22,8 +22,8 @@ public class GitProfileStore : IGitProfileStore
     {
         var d = await GetProfileManager();
         d.Profiles[profileName] = configurations;
-        var file = await SaveProfileManager(d);
-        return file.Length > 0;
+        var success = await SaveProfileManager(d);
+        return success;
     }
 
     public async Task<bool> DeleteProfile(string profileName)
@@ -40,23 +40,21 @@ public class GitProfileStore : IGitProfileStore
         return d.Profiles.Keys;
     }
 
-    private async Task<FileInfo> SaveProfileManager(ProfileManager d)
+    private async Task<bool> SaveProfileManager(ProfileManager d)
     {
         var yaml = ser.Serialize(d);
-        var file = await fs.GetProfileFile();
-        await fs.WriteFileAsync(file.FullName, yaml);
-        file.Refresh();
-
-        return file;
+        await fs.WriteFileAsync(yaml);
+        return true;
     }
 
     private async Task<ProfileManager> GetProfileManager()
     {
-        var file = await fs.GetProfileFile();
-        var content = await fs.ReadFileAsync(file.FullName);
+        var content = await fs.ReadFileAsync();
         return ser.DeSerialize(content);
     }
 }
+
+
 
 public interface IProfileSerializer
 {
@@ -66,8 +64,7 @@ public interface IProfileSerializer
 }
 public interface IFileSystem
 {
-    Task<string> ReadFileAsync(string path);
-    Task WriteFileAsync(string path, string content);
-    Task<FileInfo> GetProfileFile();
+    Task<string> ReadFileAsync();
+    Task WriteFileAsync(string content);
     bool FileExists();
 }
