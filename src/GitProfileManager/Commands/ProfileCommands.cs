@@ -2,7 +2,6 @@ using GitProfileManager.Lib.Services;
 
 namespace GitProfileManager.Commands;
 
-[ConsoleAppFilter<ReplaceLogFilter>]
 public class ProfileCommands(IGitProfileStore store, ICommandFileService fileService, ILogger<ProfileCommands> logger)
 {
     /// <summary>

@@ -1,6 +1,7 @@
 
 using GitProfileManager.Lib.Configuration;
 using GitProfileManager.Lib.Services;
+using Serilog;
 
 namespace GitProfileManager.Services;
 
@@ -8,7 +9,6 @@ namespace GitProfileManager.Services;
 [Singleton<ILoggerFactory>(Instance = nameof(LoggerFactory))]
 [Singleton(typeof(ILogger<>), Factory = nameof(CreateLogger))]
 [Import(typeof(IOptionsModule))]
-// [Transient<IConfigureOptions<CliConfig>>(Factory = nameof(BindCliConfig))]
 [Singleton<IGit, Git>]
 [Singleton<IGitConfigService, GitConfigService>]
 [Transient<IGitProfileStore, GitProfileStore>]
@@ -17,6 +17,7 @@ namespace GitProfileManager.Services;
 [Singleton<ICommandFileService, CommandFileService>]
 [Singleton<ActivationCommands>]
 [Singleton<ProfileCommands>]
+// [Transient<IConfigureOptions<CliConfig>>(Factory = nameof(BindCliConfig))]
 // [Singleton<IConfiguration>(Factory = nameof(CreateConfiguration))]
 
 internal partial class MyServiceProvider
@@ -32,7 +33,14 @@ internal partial class MyServiceProvider
             ?? (XDGHelper.GetConfigFilePath())
             ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ProfileManager.FileName));
     private ILoggerFactory LoggerFactory
-        => MSLogger.Create(builder => builder.AddConsole());
+        => MSLogger.Create(builder => builder.AddSerilog(
+            new LoggerConfiguration()
+                    .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "application.log"),
+                        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u}] {SourceContext}: {Message:lj}{NewLine}{Exception}",
+                        rollingInterval: RollingInterval.Day,
+                        shared: true)
+                    .Enrich.WithProperty("Application Name", "<APP NAME>")
+                .CreateLogger()));
 
     private ILogger<T> CreateLogger<T>()
         => LoggerFactory.CreateLogger<T>();

@@ -14,7 +14,8 @@
             "launchSettingsFilePath": "${workspaceFolder}/src/GitProfileManager/Properties/launchSettings.json",
             "logging": {
                 "moduleLoad": false
-            }
+            },
+            "console": "externalTerminal"
         },
         {
             // Use IntelliSense to find out which attributes exist for C# debugging

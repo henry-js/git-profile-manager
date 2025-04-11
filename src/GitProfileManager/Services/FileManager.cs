@@ -22,7 +22,7 @@ internal class FileManager : IFileSystem
         {
             return await File.ReadAllTextAsync(path);
         }
-        throw new FileNotFoundException(path);
+        throw new FileNotFoundException($"File does not exist: {path}");
     }
 
     public async Task WriteFileAsync(string contents)

@@ -54,8 +54,6 @@ public class GitProfileStore : IGitProfileStore
     }
 }
 
-
-
 public interface IProfileSerializer
 {
     string Serialize(ProfileManager profileManager);
