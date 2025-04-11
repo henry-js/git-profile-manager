@@ -2,13 +2,15 @@ using GitProfileManager.Lib.Services;
 
 namespace GitProfileManager.Commands;
 
-public class ProfileCommands(IGitProfileStore store, ICommandFileService fileService)
+[ConsoleAppFilter<ReplaceLogFilter>]
+public class ProfileCommands(IGitProfileStore store, ICommandFileService fileService, ILogger<ProfileCommands> logger)
 {
     /// <summary>
     /// Lists available profiles
     /// </summary>
     public async Task<int> List()
     {
+        logger.LogInformation("In list command");
         var profiles = await store.GetProfileNames();
         Console.WriteLine("Currently stored profiles: ");
         if (profiles.Any())

@@ -2,7 +2,7 @@
   "profiles": {
     "Debug": {
       "commandName": "Project",
-      "commandLineArgs": "profile show personal",
+      "commandLineArgs": "profile list",
     }
   }
 }

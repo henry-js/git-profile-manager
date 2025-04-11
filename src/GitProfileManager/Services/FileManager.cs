@@ -16,28 +16,17 @@ internal class FileManager : IFileSystem
         return fileInfo.Exists;
     }
 
-    public async Task<FileInfo> GetProfileFile()
+    public async Task<string> ReadFileAsync()
     {
-        var file = new FileInfo(path);
-        if (!file.Exists)
+        if (FileExists())
         {
-            var dir = file.Directory?.FullName ?? throw new DirectoryNotFoundException();
-            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-            await using var s = file.Create();
-            await s.FlushAsync();
-            await s.DisposeAsync();
+            return await File.ReadAllTextAsync(path);
         }
-        file.Refresh();
-        return file;
+        throw new FileNotFoundException(path);
     }
 
-    public Task<string> ReadFileAsync()
+    public async Task WriteFileAsync(string contents)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task WriteFileAsync(string content)
-    {
-        throw new NotImplementedException();
+        await File.WriteAllTextAsync(path, contents);
     }
 }
