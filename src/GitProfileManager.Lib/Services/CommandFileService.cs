@@ -1,4 +1,5 @@
 using GitProfileManager.Lib.Extensions;
+
 using Pair = System.Collections.Generic.KeyValuePair<string, string>;
 
 namespace GitProfileManager.Lib.Services;
@@ -34,7 +35,7 @@ public class CommandFileService : ICommandFileService
             );
         }
         var text = configurations.Select(RenderConfig);
-        // var text = configurations.Select(p => $"{p.Key} {((p.Value.StartsWith("\"") && p.Value.EndsWith("\"")) ? p.Value : "\"" + p.Value + "\"")}");
+
         if (includeCommand)
         {
             text = text.Select(t => $"git config {t}");

@@ -1,4 +1,3 @@
-
 namespace GitProfileManager.Lib.Services;
 
 public class GitConfigService : IGitConfigService

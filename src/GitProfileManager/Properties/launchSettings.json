@@ -3,6 +3,7 @@
     "Debug": {
       "commandName": "Project",
       "commandLineArgs": "profile list",
+      "workingDirectory": "C:\\Users\\henryj"
     }
   }
 }
