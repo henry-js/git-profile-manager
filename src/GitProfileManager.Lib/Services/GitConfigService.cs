@@ -16,7 +16,7 @@ public class GitConfigService : IGitConfigService
             args = args with { Value = $"\"{args.Value}\"" };
         }
         var scope = GetScope(args.Scope);
-        var result = await git.Config([scope, "set", args.Key, args.Value]);
+        var result = await git.Config(["set", scope, args.Key, args.Value]);
 
         return result;
     }
@@ -27,7 +27,7 @@ public class GitConfigService : IGitConfigService
 
         var scope = GetScope(args.Scope);
 
-        var result = await git.Config([scope, "unset", args.Key]);
+        var result = await git.Config(["unset", scope, args.Key]);
 
         return result.IsSuccess;
         // var output = _runner.RunCommand($"config {(global ? "--global" : string.Empty)} --unset {key} {value}");

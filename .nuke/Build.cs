@@ -1,10 +1,11 @@
 using henryjs.Nuke.Components;
+
 using Nuke.Common;
 using Nuke.Common.IO;
-using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MinVer;
+
 using Serilog;
 
 class Build : NukeBuild, IAssetRelease, ITest, IHasSolution
@@ -36,7 +37,7 @@ class Build : NukeBuild, IAssetRelease, ITest, IHasSolution
             Log.Information("Release.AssetExecutable: {AssetExecutable}", Release.AssetExecutable);
             Log.Information("Release.ReleaseDirectory: {ReleaseDirectory}", Release.ReleaseDirectory);
 
-            Vpk.Invoke($"pack --packId git-prof-man --packVersion {version} --packDir {Release.PublishDirectory} --mainExe {Release.AssetExecutable}.exe --outputDir {Release.ReleaseDirectory} --shortcuts None");
+            Vpk.Invoke($"pack --packId git-profile-manager --packVersion {version} --packDir {Release.PublishDirectory} --mainExe {Release.AssetExecutable}.exe --outputDir {Release.ReleaseDirectory} --shortcuts None");
         });
 
     Target ITest.Test => _ => _
