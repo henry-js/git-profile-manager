@@ -32,7 +32,7 @@ public static class EnvironmentHelper
     {
         string path = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User) ?? string.Empty;
         string appDirectory = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory);
-        appDirectory = path.EndsWith(Path.PathSeparator) ? appDirectory : $"{Path.PathSeparator}{appDirectory}";
+        path = path.EndsWith(Path.PathSeparator) ? path + appDirectory : $"{path}{Path.PathSeparator}{appDirectory}";
 
         if (path.Contains(appDirectory))
         {
