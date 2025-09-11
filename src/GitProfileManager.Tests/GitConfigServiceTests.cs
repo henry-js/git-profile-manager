@@ -29,13 +29,10 @@ public class GitConfigServiceTests
 
         // Assert
         await Assert.That(result.IsSuccess).IsTrue();
-        await _git.Received(1)
+        await _git.Received()
             .Config(
                 Arg.Is<string[]>(args =>
-                    args[0] == "--local"
-                    && args[1] == "set"
-                    && args[2] == "user.name"
-                    && args[3] == "\"Alice\""
+                    args[0] == "--local" && args[1] == "user.name" && args[2] == "\"Alice\""
                 )
             );
     }

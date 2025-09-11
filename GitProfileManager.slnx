@@ -1,15 +1,7 @@
 <Solution>
-  <Configurations>
-    <Platform Name="Any CPU" />
-    <Platform Name="x64" />
-    <Platform Name="x86" />
-  </Configurations>
   <Folder Name="/src/">
     <Project Path="src/GitProfileManager.Lib/GitProfileManager.Lib.csproj" />
     <Project Path="src/GitProfileManager.Tests/GitProfileManager.Tests.csproj" />
     <Project Path="src/GitProfileManager/GitProfileManager.csproj" />
   </Folder>
-  <Project Path=".nuke/_build.csproj">
-    <Build Solution="*|Any CPU" Project="false" />
-  </Project>
 </Solution>
