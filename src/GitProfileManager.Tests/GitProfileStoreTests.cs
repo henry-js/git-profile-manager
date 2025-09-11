@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using GitProfileManager.Lib.Configuration;
 using GitProfileManager.Lib.Services;
 using NSubstitute;

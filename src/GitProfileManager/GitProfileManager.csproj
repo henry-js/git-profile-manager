@@ -46,8 +46,6 @@
   <ItemGroup>
     <Using Include="GitProfileManager.Commands" />
     <Using Include="ConsoleAppFramework" />
-    <Using Include="Jab" />
-    <Using Include="Raiqub.JabModules.MicrosoftExtensionsOptions" />
     <Using Include="Microsoft.Extensions.Configuration" />
     <Using Include="Microsoft.Extensions.Logging" />
     <Using Include="Microsoft.Extensions.Logging.LoggerFactory" Alias="MSLogger" />

@@ -1,5 +1,5 @@
 using GitProfileManager.Lib.Extensions;
-using Pair = System.Collections.Generic.KeyValuePair<string, string>;
+using Kvp = System.Collections.Generic.KeyValuePair<string, string>;
 
 namespace GitProfileManager.Lib.Services;
 
@@ -23,14 +23,14 @@ public class CommandFileService : ICommandFileService
         bool includeCommand = false
     )
     {
-        string RenderConfig(Pair config)
+        static string RenderConfig(Kvp config)
         {
             return string.Format(
                 "{0} {1}",
                 config.Key,
                 (
-                    (config.Value.StartsWith("\"") || config.Value.StartsWith("'"))
-                    && (config.Value.EndsWith("\"") || config.Value.EndsWith("'"))
+                    (config.Value.StartsWith('\"') || config.Value.StartsWith('\''))
+                    && (config.Value.EndsWith('\"') || config.Value.EndsWith('\''))
                 )
                     ? config.Value
                     : $"\"{config.Value}\""
