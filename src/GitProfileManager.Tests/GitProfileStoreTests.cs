@@ -28,13 +28,7 @@ public class GitProfileStoreTests
     {
         var profileManager = new ProfileManager
         {
-            Profiles = new()
-            {
-                ["work"] = new()
-                {
-                    ["user.name"] = "Alice"
-                }
-            }
+            Profiles = new() { ["work"] = new() { ["user.name"] = "Alice" } },
         };
         const string yaml = "mock-content";
 
@@ -68,10 +62,7 @@ public class GitProfileStoreTests
         const string yaml = "serialized-yaml";
         const string profileName = "personal";
         Dictionary<string, string> configurations = new() { ["user.email"] = "me@example.com" };
-        var profileManager = new ProfileManager
-        {
-            Profiles = []
-        };
+        var profileManager = new ProfileManager { Profiles = [] };
         _fileSystem.ReadFileAsync().Returns("existing-yaml");
         _serializer.DeSerialize("existing-yaml").Returns(profileManager);
         _serializer.Serialize(Arg.Any<ProfileManager>()).Returns(yaml);
@@ -92,7 +83,7 @@ public class GitProfileStoreTests
 
         var profiles = new Dictionary<string, Dictionary<string, string>>
         {
-            [profileName] = new Dictionary<string, string> { ["user.name"] = "Jane" }
+            [profileName] = new Dictionary<string, string> { ["user.name"] = "Jane" },
         };
         var manager = new ProfileManager { Profiles = profiles };
 
@@ -117,8 +108,8 @@ public class GitProfileStoreTests
             Profiles = new Dictionary<string, Dictionary<string, string>>
             {
                 ["work"] = [],
-                ["personal"] = []
-            }
+                ["personal"] = [],
+            },
         };
 
         _fileSystem.ReadFileAsync().Returns(yaml);

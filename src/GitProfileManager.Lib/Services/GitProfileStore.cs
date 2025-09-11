@@ -9,6 +9,7 @@ public class GitProfileStore : IGitProfileStore
         this.fs = fileSystem;
         this.ser = profileSerializer;
     }
+
     private readonly IFileSystem fs;
     private readonly IProfileSerializer ser;
 
@@ -18,7 +19,10 @@ public class GitProfileStore : IGitProfileStore
         return d.Profiles.TryGetValue(profileName, out var value) ? value : null;
     }
 
-    public async Task<bool> WriteProfile(string profileName, Dictionary<string, string> configurations)
+    public async Task<bool> WriteProfile(
+        string profileName,
+        Dictionary<string, string> configurations
+    )
     {
         var d = await GetProfileManager();
         d.Profiles[profileName] = configurations;
@@ -60,6 +64,7 @@ public interface IProfileSerializer
     ProfileManager DeSerialize(string content);
     ProfileManager MigrateIfNeeded(string content);
 }
+
 public interface IFileSystem
 {
     Task<string> ReadFileAsync();

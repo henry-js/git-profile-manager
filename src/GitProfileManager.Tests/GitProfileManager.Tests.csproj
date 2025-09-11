@@ -1,12 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="AwesomeAssertions" Version="8.1.0" />
     <PackageReference Include="AwesomeAssertions.Analyzers" Version="0.34.2">
@@ -22,9 +20,7 @@
     </PackageReference>
     <PackageReference Include="TUnit" Version="0.19.24" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\GitProfileManager\GitProfileManager.csproj" />
   </ItemGroup>
-
 </Project>

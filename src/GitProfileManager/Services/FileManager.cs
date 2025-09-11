@@ -10,6 +10,7 @@ public class FileManager : IFileSystem
     {
         this.path = path;
     }
+
     public bool FileExists()
     {
         var fileInfo = new FileInfo(path);

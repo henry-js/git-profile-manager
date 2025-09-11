@@ -26,14 +26,17 @@ public class YamlProfileSerializer : IProfileSerializer
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
             .Build();
     }
+
     public ProfileManager DeSerialize(string content)
     {
         return MigrateIfNeeded(content);
     }
+
     public string Serialize(ProfileManager profileManager)
     {
         return _ser.Serialize(profileManager);
     }
+
     public ProfileManager MigrateIfNeeded(string content)
     {
         try
@@ -44,12 +47,17 @@ public class YamlProfileSerializer : IProfileSerializer
         {
             try
             {
-                var profiles = _deser.Deserialize<Dictionary<string, Dictionary<string, string>>>(content);
+                var profiles = _deser.Deserialize<Dictionary<string, Dictionary<string, string>>>(
+                    content
+                );
                 return new ProfileManager() { Profiles = profiles };
             }
             catch (Exception e)
             {
-                throw new MigrationException("Could not migrate legacy .gitprofiles file to new ProfileManager format", e);
+                throw new MigrationException(
+                    "Could not migrate legacy .gitprofiles file to new ProfileManager format",
+                    e
+                );
             }
         }
         catch (Exception)

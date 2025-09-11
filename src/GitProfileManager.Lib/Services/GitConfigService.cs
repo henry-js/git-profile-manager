@@ -46,5 +46,11 @@ public class GitConfigService : IGitConfigService
     }
 }
 
-public enum GitConfigScope { Unknown = 0,   /* Worktree = 1, */    Local = 2, Global = 3,  /*  System = 4, */};
+public enum GitConfigScope
+{
+    Unknown = 0, /* Worktree = 1, */
+    Local = 2,
+    Global = 3, /*  System = 4, */
+};
+
 public record GitConfigArgs(string Key, string? Value, GitConfigScope Scope = GitConfigScope.Local);

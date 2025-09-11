@@ -2,7 +2,11 @@ using GitProfileManager.Lib.Services;
 
 namespace GitProfileManager.Commands;
 
-public class ProfileCommands(IGitProfileStore store, ICommandFileService fileService, ILogger<ProfileCommands> logger)
+public class ProfileCommands(
+    IGitProfileStore store,
+    ICommandFileService fileService,
+    ILogger<ProfileCommands> logger
+)
 {
     /// <summary>
     /// Lists available profiles
@@ -47,7 +51,9 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
         var d = await store.WriteProfile(name, cmds);
         if (d)
         {
-            Console.WriteLine($"Succesfully created '{name}' profile {(source ? "from " + from : string.Empty)}");
+            Console.WriteLine(
+                $"Succesfully created '{name}' profile {(source ? "from " + from : string.Empty)}"
+            );
             Console.WriteLine($"Activate it using 'git-profile-manager activate {name}'");
             return 200;
         }
@@ -63,13 +69,16 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
     public async Task<int> Delete([Argument] string name, bool NonInteractive)
     {
         var profile = store.ReadProfile(name);
-        if (profile == null) return 404;
+        if (profile == null)
+            return 404;
         bool confirm = false;
         if (!NonInteractive)
         {
             while (!confirm)
             {
-                Console.Write($"{Environment.NewLine}This will complete remove the '{name}' profile. Are you sure? [y/n]");
+                Console.Write(
+                    $"{Environment.NewLine}This will complete remove the '{name}' profile. Are you sure? [y/n]"
+                );
                 int key;
                 try
                 {
@@ -84,11 +93,14 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
                 catch
                 {
                     Console.WriteLine();
-                    Console.Error.WriteLine("Could not confirm on current terminal. Try passing --non-interactive to delete without confirmation.");
+                    Console.Error.WriteLine(
+                        "Could not confirm on current terminal. Try passing --non-interactive to delete without confirmation."
+                    );
                     return 412;
                 }
                 Console.WriteLine();
-                if (key == 'n' || key == 'N') return 3;
+                if (key == 'n' || key == 'N')
+                    return 3;
                 confirm = key == 'y' || key == 'Y';
             }
         }
@@ -108,7 +120,11 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
     /// <param name="profileName">The profile to add a new configuration to. Will be created if it does not exist</param>
     /// <param name="configVal">The config value to add to the profile, separated by an '=' symbol.</param>
     /// <param name="remove">-r, Removes the given configuration item from the profile, instead of adding it.</param>
-    public async Task<int> Edit([Argument] string profileName, [Argument] string configVal, bool remove)
+    public async Task<int> Edit(
+        [Argument] string profileName,
+        [Argument] string configVal,
+        bool remove
+    )
     {
         var profile = await store.ReadProfile(profileName) ?? [];
         var config = configVal.Split('=');
@@ -169,7 +185,11 @@ public class ProfileCommands(IGitProfileStore store, ICommandFileService fileSer
     /// <param name="commandFile">A file of git commands to create a profile from.</param>
     /// <param name="profileName">Name of the profile to create. Defaults to the input file name</param>
     /// <param name="fromConfig">Read commands from config, rather than command file</param>
-    public async Task<int> Import([Argument] string commandFile, string profileName, bool fromConfig)
+    public async Task<int> Import(
+        [Argument] string commandFile,
+        string profileName,
+        bool fromConfig
+    )
     {
         if (fromConfig)
         {

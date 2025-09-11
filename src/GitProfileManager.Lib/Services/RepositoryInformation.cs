@@ -6,42 +6,27 @@ public class RepositoryInformation : IDisposable
 {
     public string CommitHash
     {
-        get
-        {
-            return RunCommand("rev-parse HEAD");
-        }
+        get { return RunCommand("rev-parse HEAD"); }
     }
 
     public string BranchName
     {
-        get
-        {
-            return RunCommand("rev-parse --abbrev-ref HEAD");
-        }
+        get { return RunCommand("rev-parse --abbrev-ref HEAD"); }
     }
 
     public string TrackedBranchName
     {
-        get
-        {
-            return RunCommand("rev-parse --abbrev-ref --symbolic-full-name @{u}");
-        }
+        get { return RunCommand("rev-parse --abbrev-ref --symbolic-full-name @{u}"); }
     }
 
     public bool HasUnpushedCommits
     {
-        get
-        {
-            return !String.IsNullOrWhiteSpace(RunCommand("log @{u}..HEAD"));
-        }
+        get { return !String.IsNullOrWhiteSpace(RunCommand("log @{u}..HEAD")); }
     }
 
     public bool HasUncommittedChanges
     {
-        get
-        {
-            return !String.IsNullOrWhiteSpace(RunCommand("status --porcelain"));
-        }
+        get { return !String.IsNullOrWhiteSpace(RunCommand("status --porcelain")); }
     }
 
     public IEnumerable<string> Log
@@ -79,7 +64,8 @@ public class RepositoryInformation : IDisposable
             RedirectStandardOutput = true,
             FileName = Directory.Exists(gitPath) ? gitPath : "git.exe",
             CreateNoWindow = true,
-            WorkingDirectory = (path != null && Directory.Exists(path)) ? path : Directory.GetCurrentDirectory()
+            WorkingDirectory =
+                (path != null && Directory.Exists(path)) ? path : Directory.GetCurrentDirectory(),
         };
 
         _gitProcess = new Process();
@@ -88,10 +74,7 @@ public class RepositoryInformation : IDisposable
 
     internal bool IsGitRepository
     {
-        get
-        {
-            return !String.IsNullOrWhiteSpace(RunCommand("log -1"));
-        }
+        get { return !String.IsNullOrWhiteSpace(RunCommand("log -1")); }
     }
 
     private string RunCommand(string args)

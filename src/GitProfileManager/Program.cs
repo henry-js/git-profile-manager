@@ -1,15 +1,14 @@
 ﻿using GitProfileManager.DependencyInjection;
 using GitProfileManager.Filters;
 using GitProfileManager.Services;
-
 using Microsoft.Extensions.DependencyInjection;
-
 using Velopack;
 
 VelopackApp.Build().Run();
 
 // #if !DEBUG
 EnvironmentHelper.AddToPath();
+
 // #endif
 
 var services = new ServiceCollection();
@@ -36,9 +35,13 @@ public static class EnvironmentHelper
 {
     public static void AddToPath()
     {
-        string path = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User) ?? string.Empty;
+        string path =
+            Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User)
+            ?? string.Empty;
         string appDirectory = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory);
-        path = path.EndsWith(Path.PathSeparator) ? path + appDirectory : $"{path}{Path.PathSeparator}{appDirectory}";
+        path = path.EndsWith(Path.PathSeparator)
+            ? path + appDirectory
+            : $"{path}{Path.PathSeparator}{appDirectory}";
 
         if (path.Contains(appDirectory))
         {
@@ -46,7 +49,11 @@ public static class EnvironmentHelper
         }
         else
         {
-            Environment.SetEnvironmentVariable("PATH", appDirectory, EnvironmentVariableTarget.User);
+            Environment.SetEnvironmentVariable(
+                "PATH",
+                appDirectory,
+                EnvironmentVariableTarget.User
+            );
         }
 
         Console.WriteLine($"BaseDirectory: {appDirectory}");

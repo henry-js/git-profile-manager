@@ -9,6 +9,7 @@ public class GitTests
     private readonly IGit _git;
 
     public GitTests() => _git = new Git();
+
     [Test]
     public async Task Version_Should_ReturnExitCodeZero_ForGitVersion()
     {

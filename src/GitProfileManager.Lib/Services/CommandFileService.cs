@@ -1,5 +1,4 @@
 using GitProfileManager.Lib.Extensions;
-
 using Pair = System.Collections.Generic.KeyValuePair<string, string>;
 
 namespace GitProfileManager.Lib.Services;
@@ -9,17 +8,20 @@ public class CommandFileService : ICommandFileService
     public Dictionary<string, string> ReadFromFile(FileInfo filePath)
     {
         filePath.Refresh();
-        if (!filePath.Exists) throw new FileNotFoundException("Could not find command file", filePath.FullName);
+        if (!filePath.Exists)
+            throw new FileNotFoundException("Could not find command file", filePath.FullName);
         var lines = File.ReadAllLines(filePath.FullName);
         var confs = lines
             .ToConfig()
-            .ToDictionary(
-                k => k.Split(' ')[0],
-                v => string.Join(" ", v.Split(' ').Skip(1)).Trim());
+            .ToDictionary(k => k.Split(' ')[0], v => string.Join(" ", v.Split(' ').Skip(1)).Trim());
         return confs;
     }
 
-    public bool WriteToFile(Dictionary<string, string> configurations, FileInfo path, bool includeCommand = false)
+    public bool WriteToFile(
+        Dictionary<string, string> configurations,
+        FileInfo path,
+        bool includeCommand = false
+    )
     {
         string RenderConfig(Pair config)
         {

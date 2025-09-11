@@ -4,13 +4,15 @@ public static class Extensions
 {
     public static string ToConfig(this string s)
     {
-        return string.Join(Environment.NewLine, s.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+        return string.Join(
+            Environment.NewLine,
+            s.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+        );
     }
 
     public static IEnumerable<string> ToConfig(this IEnumerable<string> ss)
     {
-        return ss
-            .Where(l => !string.IsNullOrWhiteSpace(l))
+        return ss.Where(l => !string.IsNullOrWhiteSpace(l))
             .Where(l => !l.StartsWith("#"))
             .Select(l => l.Trim())
             .Select(l =>
