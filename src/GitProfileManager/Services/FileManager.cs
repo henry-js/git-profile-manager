@@ -2,7 +2,7 @@ using GitProfileManager.Lib.Services;
 
 namespace GitProfileManager.Services;
 
-internal class FileManager : IFileSystem
+public class FileManager : IFileSystem
 {
     private readonly string path;
 

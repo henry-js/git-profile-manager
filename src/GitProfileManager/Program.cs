@@ -1,5 +1,8 @@
-﻿using GitProfileManager.Filters;
+﻿using GitProfileManager.DependencyInjection;
+using GitProfileManager.Filters;
 using GitProfileManager.Services;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using Velopack;
 
@@ -8,9 +11,12 @@ VelopackApp.Build().Run();
 // #if !DEBUG
 EnvironmentHelper.AddToPath();
 // #endif
-MyServiceProvider sp = new();
 
-ConsoleApp.ServiceProvider = sp;
+var services = new ServiceCollection();
+services.RegisterServices();
+services.AddLogging(builder => builder.ConfigureSerilog());
+
+ConsoleApp.ServiceProvider = services.BuildServiceProvider();
 var app = ConsoleApp.Create();
 
 app.Add<ActivationCommands>();
